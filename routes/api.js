@@ -91,16 +91,33 @@ connect().then(issues => {
       ) {
         const currentDate = new Date();
         try {
+          const old = await issues.findOne({ _id: ObjectID(_id) });
           const doc = await issues.updateOne(
             { _id: ObjectID(_id) },
             {
               $set: {
-                issue_text: req.body.issue_text || "",
-                issue_title: req.body.issue_title || "",
-                created_by: req.body.created_by || "",
-                assigned_to: req.body.assigned_to || "",
-                status_text: req.body.status_text || "",
-                open: Boolean(req.body.open) || true,
+                issue_text:
+                  req.body.issue_text === undefined
+                    ? old.issue_text
+                    : req.body.issue_text,
+                issue_title:
+                  req.body.issue_title === undefined
+                    ? old.issue_title
+                    : req.body.issue_title,
+                created_by:
+                  req.body.created_by === undefined
+                    ? old.created_by
+                    : req.body.created_by,
+                assigned_to:
+                  req.body.created_by === undefined
+                    ? old.created_by
+                    : req.body.created_by,
+                status_text:
+                  req.body.status_text === undefined
+                    ? old.status_text
+                    : req.body.status_text,
+                open:
+                  req.body.open === undefined ? true : Boolean(req.body.open),
                 updated_on: currentDate,
               },
             }
@@ -116,12 +133,11 @@ connect().then(issues => {
         } catch (err) {
           if (
             String(err).match(
-              /Error: Argument passed in must be a single String/g
+              /Error: Argument passed in must be a single String|TypeError/g
             )
           ) {
             res.status(404).json({
-              error:
-                "Argument passed in must be a single String of 12 bytes or a string of 24 hex characters",
+              error: "invalid id",
             });
           } else {
             console.error(err);
@@ -160,8 +176,7 @@ connect().then(issues => {
           )
         ) {
           res.status(404).json({
-            error:
-              "Argument passed in must be a single String of 12 bytes or a string of 24 hex characters",
+            error: "invalid id",
           });
         } else {
           console.error(err);

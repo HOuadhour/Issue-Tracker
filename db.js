@@ -6,6 +6,7 @@ const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  poolSize: 50,
 });
 
 module.exports = async function connect() {
