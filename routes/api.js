@@ -131,17 +131,8 @@ connect().then(issues => {
             });
           }
         } catch (err) {
-          if (
-            String(err).match(
-              /Error: Argument passed in must be a single String|TypeError/g
-            )
-          ) {
-            res.status(404).json({
-              error: "invalid id",
-            });
-          } else {
-            console.error(err);
-          }
+          console.error(err);
+          res.json({ error: "could not update", _id });
         }
       } else {
         res.json({
@@ -170,17 +161,8 @@ connect().then(issues => {
           res.json({ error: "could not delete", _id });
         }
       } catch (err) {
-        if (
-          String(err).match(
-            /Error: Argument passed in must be a single String/g
-          )
-        ) {
-          res.status(404).json({
-            error: "invalid id",
-          });
-        } else {
-          console.error(err);
-        }
+        console.error(err);
+        res.json({ error: "could not delete", _id });
       }
     }
   });

@@ -245,9 +245,9 @@ suite("Functional Tests", function () {
         issue_title: "Correct Title",
       })
       .end((err, res) => {
-        assert.strictEqual(res.status, 404);
+        assert.strictEqual(res.status, 200);
         assert.strictEqual(res.type, "application/json");
-        assert.strictEqual(res.body.error, "invalid id");
+        assert.strictEqual(res.body.error, "could not update");
 
         done();
       });
